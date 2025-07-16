@@ -21,13 +21,20 @@ export const TypeFilter = ({ value, onChange }: TypeFilterProps) => {
     queryFn: fetchTypes,
   });
 
+  const handleValueChange = (newValue: string) => {
+    // Convert "all" back to empty string for the parent component
+    onChange(newValue === "all" ? "" : newValue);
+  };
+
   return (
-    <Select value={value} onValueChange={onChange}>
+    <Select value={value || "all"} onValueChange={handleValueChange}>
       <SelectTrigger className="bg-white/90 border-white/20 focus:bg-white focus:border-white/40 transition-all duration-300 rounded-xl shadow-lg">
         <SelectValue placeholder="Filtrer par type" />
       </SelectTrigger>
       <SelectContent className="bg-white border-white/20 shadow-xl rounded-xl">
-        <SelectItem value="">Tous les types</SelectItem>
+        <SelectItem value="all" className="capitalize">
+          Tous les types
+        </SelectItem>
         {types.map((type: any) => (
           <SelectItem key={type.name} value={type.name} className="capitalize">
             {type.name}
