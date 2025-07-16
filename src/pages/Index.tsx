@@ -69,49 +69,60 @@ const Index = () => {
 
   if (isLoading && pokemonList.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <LoadingSpinner />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-red-500 to-red-600 shadow-2xl">
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="relative container mx-auto px-4 py-8">
-          <h1 className="text-5xl md:text-7xl font-bold text-white text-center mb-4 animate-fade-in">
-            Pokédex
-          </h1>
-          <p className="text-xl text-white/90 text-center animate-fade-in">
-            Découvrez le monde magique des Pokémons
-          </p>
-        </div>
-        <div className="absolute -bottom-1 left-0 right-0 h-6 bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500 transform -skew-y-1"></div>
-      </div>
-
-      {/* Search and Filters */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col md:flex-row gap-4 mb-8">
-          <div className="flex-1">
-            <SearchBar value={searchTerm} onChange={setSearchTerm} />
+      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center space-y-4">
+            <h1 className="text-4xl md:text-6xl font-bold text-foreground tracking-tight">
+              Pokédex
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Explorez l'univers fascinant des Pokémons et découvrez leurs caractéristiques uniques
+            </p>
           </div>
-          <div className="md:w-64">
-            <TypeFilter value={selectedType} onChange={setSelectedType} />
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-8">
+        {/* Search and Filters */}
+        <div className="mb-8 space-y-4">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1">
+              <SearchBar value={searchTerm} onChange={setSearchTerm} />
+            </div>
+            <div className="md:w-64">
+              <TypeFilter value={selectedType} onChange={setSelectedType} />
+            </div>
           </div>
         </div>
 
         {/* Pokemon Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-          {filteredPokemon.map((pokemon, index) => (
-            <PokemonCard 
-              key={pokemon.id} 
-              pokemon={pokemon} 
-              index={index}
-            />
-          ))}
-        </div>
+        {filteredPokemon.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+            {filteredPokemon.map((pokemon, index) => (
+              <PokemonCard 
+                key={pokemon.id} 
+                pokemon={pokemon} 
+                index={index}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground text-lg">
+              Aucun Pokémon trouvé pour cette recherche
+            </p>
+          </div>
+        )}
 
         {/* Pagination */}
         {!searchTerm && !selectedType && (
@@ -120,28 +131,30 @@ const Index = () => {
               onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
               disabled={currentPage === 0}
               variant="outline"
-              className="bg-white/90 hover:bg-white border-white/20 text-gray-800"
+              size="lg"
             >
               <ChevronLeft className="w-4 h-4 mr-2" />
               Précédent
             </Button>
             
-            <span className="bg-white/90 px-4 py-2 rounded-lg font-semibold text-gray-800">
-              Page {currentPage + 1}
-            </span>
+            <div className="bg-card px-4 py-2 rounded-lg border">
+              <span className="font-semibold text-foreground">
+                Page {currentPage + 1}
+              </span>
+            </div>
             
             <Button
               onClick={() => setCurrentPage(currentPage + 1)}
               disabled={isLoading}
               variant="outline"
-              className="bg-white/90 hover:bg-white border-white/20 text-gray-800"
+              size="lg"
             >
               Suivant
               <ChevronRight className="w-4 h-4 ml-2" />
             </Button>
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 };
